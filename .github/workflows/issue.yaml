@@ -1,0 +1,47 @@
+---
+name: 🆘 Help wanted
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  issue:
+    name: 🔍 Get inputs
+    if: ${{ contains(github.event.issue.labels.*.name, 'help wanted') }}
+    runs-on: ubuntu-latest
+    outputs:
+      helpneededwith: ${{ steps.inputs.outputs.help_needed_with }}
+    steps:
+      - name: 📥 Get inputs
+        id: inputs
+        uses: drdonoso/issueform-get-inputs@main
+        with:
+          body-input: ${{ github.event.issue.body }}
+    
+  call-workflow:
+    needs: issue
+    runs-on: ubuntu-latest
+    name: 🚀 Run 
+    steps: 
+      - name: 🚀 Run
+        shell: bash
+        run: |
+          echo "Running the workflow"
+          echo "Help needed with: ${{ needs.issue.outputs.helpneededwith }}"
+
+  close:
+    needs: call-workflow
+    name: ✔️ Close issue
+    runs-on: ubuntu-22.04
+    steps:
+      - name: ✍️ Close issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '### Answer here:',
+            });
