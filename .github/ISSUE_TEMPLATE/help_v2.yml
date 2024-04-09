@@ -1,13 +1,20 @@
 ---
-name: 🆘 Help requested
+name: 🆘 Help requested v2
 description: Ask for help with a problem you're facing
-title: "[HELP] "
-labels: ['help wanted']
+title: "[HELP V2] "
+labels: ['help wanted v2']
 body:
   - type: markdown
     attributes:
       value: |
         Ask your question here. Please provide as much context as possible to help us help you.
+
+  - type: input
+    attributes:
+      label: Documentation page
+      description: URL with the wiki
+    validations:
+      required: true
 
   - type: textarea
     attributes:
