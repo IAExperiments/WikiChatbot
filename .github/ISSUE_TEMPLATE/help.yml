@@ -1,7 +1,7 @@
 ---
 name: 🆘 Help requested
 description: Ask for help with a problem you're facing
-title: [HELP]
+title: "[HELP] "
 labels: ['help wanted']
 body:
   # - type: markdown
