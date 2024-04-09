@@ -4,10 +4,10 @@ description: Ask for help with a problem you're facing
 title: "[HELP] "
 labels: ['help wanted']
 body:
-  # - type: markdown
-  #   attributes:
-  #     value: |
-  #       Ask your question here. Please provide as much context as possible to help us help you.
+  - type: markdown
+    attributes:
+      value: |
+        Ask your question here. Please provide as much context as possible to help us help you.
 
   - type: textarea
     attributes:
