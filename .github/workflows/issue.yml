@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       helpneededwith: ${{ steps.inputs.outputs.help_needed_with }}
-      wiki: ${{ steps.inputs.outputs.wiki }}
+      wiki: ${{ steps.inputs.outputs.documentation_page }}
     steps:
       - name: 📥 Get inputs
         id: inputs
