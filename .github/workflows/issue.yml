@@ -17,7 +17,7 @@ jobs:
         id: inputs
         uses: drdonoso/issueform-get-inputs@main
         with:
-          body-input: ${{ github.event.issue.body }}
+          body-input: "${{ github.event.issue.body }}"
     
   call-workflow:
     needs: issue
