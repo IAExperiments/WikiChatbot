@@ -19,19 +19,34 @@ jobs:
         with:
           body: ${{ github.event.issue.body }}
     
-  call-workflow:
+  run:
     needs: issue
     runs-on: ubuntu-latest
     name: 🚀 Run 
+    env:
+      AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+      AZURE_OPENAI_ENDPOINT: ${{ vars.AZURE_OPENAI_API_ENDPOINT }}
+      AZURE_OPENAI_API_INSTANCE_NAME: ${{ vars.AZURE_OPENAI_API_INSTANCE_NAME }}
+      AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
+      WIKISITE: ${{ vars.WIKISITE }}
     steps: 
       - name: 🚀 Run
         shell: bash
         run: |
           echo "Running the workflow"
           echo "Help needed with: ${{ needs.issue.outputs.helpneededwith }}"
+      
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: NPM Install
+        run: npm install
+      
+      - name: Run script
+        run: node index.js "${{ needs.issue.outputs.helpneededwith }}"
 
   close:
-    needs: call-workflow
+    needs: run
     name: ✔️ Close issue
     runs-on: ubuntu-22.04
     steps:
