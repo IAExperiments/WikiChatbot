@@ -3,7 +3,7 @@ import { CheerioWebBaseLoader } from "langchain/document_loaders/web/cheerio";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { MemoryVectorStore } from "langchain/vectorstores/memory"
 import { OpenAIEmbeddings, ChatOpenAI } from "@langchain/openai";
-import { PromptTemplate } from "langchain/prompts";
+import { PromptTemplate } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
 import path from 'path'
 import fs from 'fs'
@@ -11,7 +11,7 @@ import { fileURLToPath } from 'url';
 import {
   RunnableSequence,
   RunnablePassthrough,
-} from "langchain/schema/runnable";
+} from "@langchain/core/runnables";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
