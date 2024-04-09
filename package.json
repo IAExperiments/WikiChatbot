@@ -1,0 +1,32 @@
+{
+  "name": "wikichatbot",
+  "version": "1.0.0",
+  "description": "A sample experiment of a chatbot for using as helper for response issues based on a wiki knowledge base",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IAExperiments/WikiChatbot.git"
+  },
+  "keywords": [
+    "ai",
+    "langchain",
+    "chatbot",
+    "wiki",
+    "github"
+  ],
+  "author": "Jose Corral and David Rodriguez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IAExperiments/WikiChatbot/issues"
+  },
+  "homepage": "https://github.com/IAExperiments/WikiChatbot#readme",
+  "dependencies": {
+    "@langchain/openai": "^0.0.26",
+    "cheerio": "^1.0.0-rc.12",
+    "langchain": "^0.1.32"
+  }
+}
