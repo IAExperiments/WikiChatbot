@@ -12,6 +12,7 @@ import {
   RunnableSequence,
   RunnablePassthrough,
 } from "@langchain/core/runnables";
+import { core } from "@actions/core";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -64,3 +65,4 @@ const chain = RunnableSequence.from([
 var result = await chain.invoke(input);
 
 console.dir(result);
+core.setOutput('answer', result);

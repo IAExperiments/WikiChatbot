@@ -45,12 +45,7 @@ jobs:
       - name: Run script
         run: node index.js "${{ needs.issue.outputs.helpneededwith }}"
 
-  close:
-    needs: run
-    name: ✔️ Close issue
-    runs-on: ubuntu-22.04
-    steps:
-      - name: ✍️ Close issue
+      - name: Response issue
         uses: actions/github-script@v6
         with:
           script: |
@@ -58,5 +53,20 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '### Answer here:',
+              body: '### Answer here: ${{ steps.run.outputs.answer }}',
             });
+  # close:
+  #   needs: run
+  #   name: ✔️ Close issue
+  #   runs-on: ubuntu-22.04
+  #   steps:
+  #     - name: ✍️ Close issue
+  #       uses: actions/github-script@v6
+  #       with:
+  #         script: |
+  #           github.rest.issues.createComment({
+  #             issue_number: context.issue.number,
+  #             owner: context.repo.owner,
+  #             repo: context.repo.repo,
+  #             body: '### Answer here:',
+  #           });
