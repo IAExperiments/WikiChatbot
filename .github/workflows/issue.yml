@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       helpneededwith: ${{ steps.inputs.outputs.help_needed_with }}
+      wiki: ${{ steps.inputs.outputs.documentation_page }}
     steps:
       - name: 📥 Get inputs
         id: inputs
@@ -23,12 +24,14 @@ jobs:
     needs: issue
     runs-on: ubuntu-latest
     name: 🚀 Run 
+    permissions:
+      issues: write
     env:
       AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
       AZURE_OPENAI_ENDPOINT: ${{ vars.AZURE_OPENAI_API_ENDPOINT }}
       AZURE_OPENAI_API_INSTANCE_NAME: ${{ vars.AZURE_OPENAI_API_INSTANCE_NAME }}
       AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
-      WIKISITE: ${{ vars.WIKISITE }}
+      WIKISITE: ${{ needs.issue.outputs.wiki || vars.WIKISITE }}
     steps: 
       - name: 🚀 Run
         shell: bash
@@ -43,14 +46,10 @@ jobs:
         run: npm install
       
       - name: Run script
+        id: run
         run: node index.js "${{ needs.issue.outputs.helpneededwith }}"
 
-  close:
-    needs: run
-    name: ✔️ Close issue
-    runs-on: ubuntu-22.04
-    steps:
-      - name: ✍️ Close issue
+      - name: Response issue
         uses: actions/github-script@v6
         with:
           script: |
@@ -58,5 +57,21 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '### Answer here:',
+              body: `### Answer: 
+              ${{ steps.run.outputs.answer }}`
             });
+  # close:
+  #   needs: run
+  #   name: ✔️ Close issue
+  #   runs-on: ubuntu-22.04
+  #   steps:
+  #     - name: ✍️ Close issue
+  #       uses: actions/github-script@v6
+  #       with:
+  #         script: |
+  #           github.rest.issues.createComment({
+  #             issue_number: context.issue.number,
+  #             owner: context.repo.owner,
+  #             repo: context.repo.repo,
+  #             body: '### Answer here:',
+  #           });
