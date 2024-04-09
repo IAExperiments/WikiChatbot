@@ -43,8 +43,8 @@ jobs:
         run: npm install
       
       - name: Run script
-        run: node index.js ${{ needs.issue.outputs.helpneededwith }}
-        
+        run: node index.js "${{ needs.issue.outputs.helpneededwith }}"
+
   close:
     needs: run
     name: ✔️ Close issue
