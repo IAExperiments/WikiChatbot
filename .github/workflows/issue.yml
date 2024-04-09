@@ -23,6 +23,8 @@ jobs:
     needs: issue
     runs-on: ubuntu-latest
     name: 🚀 Run 
+    permissions:
+      issues: write
     env:
       AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
       AZURE_OPENAI_ENDPOINT: ${{ vars.AZURE_OPENAI_API_ENDPOINT }}
