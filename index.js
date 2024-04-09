@@ -12,8 +12,8 @@ import {
   RunnableSequence,
   RunnablePassthrough,
 } from "@langchain/core/runnables";
-import { core } from "@actions/core";
 
+const core = require('@actions/core')
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
