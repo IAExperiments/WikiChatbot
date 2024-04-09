@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       helpneededwith: ${{ steps.inputs.outputs.help_needed_with }}
+      wiki: ${{ steps.inputs.outputs.wiki }}
     steps:
       - name: 📥 Get inputs
         id: inputs
@@ -30,7 +31,7 @@ jobs:
       AZURE_OPENAI_ENDPOINT: ${{ vars.AZURE_OPENAI_API_ENDPOINT }}
       AZURE_OPENAI_API_INSTANCE_NAME: ${{ vars.AZURE_OPENAI_API_INSTANCE_NAME }}
       AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
-      WIKISITE: ${{ vars.WIKISITE }}
+      WIKISITE: ${{ needs.issue.outputs.wiki || vars.WIKISITE }}
     steps: 
       - name: 🚀 Run
         shell: bash

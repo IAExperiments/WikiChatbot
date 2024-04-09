@@ -2,7 +2,7 @@
 name: 🆘 Help requested v2
 description: Ask for help with a problem you're facing
 title: "[HELP V2] "
-labels: ['help wanted v2']
+labels: ['help wanted']
 body:
   - type: markdown
     attributes:
