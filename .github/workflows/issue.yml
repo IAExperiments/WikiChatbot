@@ -73,11 +73,11 @@ jobs:
               body: `### Answer: 
                 To install the custom connector for the CCO Azure Infrastructure Dashboard, follow these steps:
             
-            1. Ensure you have downloaded and installed the Microsoft Power BI Desktop Edition from the Microsoft Store as it is a prerequisite.
-            2. Locate the `CCoDashboardAzureConnector.mez` file in the `ccodashboard/dashboards/CCODashboard-Infrastructure/` folder.
-            3. Copy the `CCoDashboardAzureConnector.mez` file to the Power BI default folder for custom connectors. This is typically located at `C:\Users%username%\Documents\Power BI Desktop\Custom Connectors`. If this folder does not exist, you will need to create it.
-            4. If you are experiencing issues with the connector and Power BI due to OneDrive, create the folder structure within the OneDrive folder at `....\Documents\Power BI Desktop\Custom Connectors`. After doing so, the custom connector should be recognized.
-            5. Open Power BI and go to Options. Under the Global category in the Security section, select (Not Recommended) Allow any extension to load without validation or warning and click OK.
-            
-            This process will install the custom connector required for the CCO Azure Infrastructure Dashboard to leverage information from Azure Management REST APIs.`
-            });
+                1. Ensure you have downloaded and installed the Microsoft Power BI Desktop Edition from the Microsoft Store as it is a prerequisite.
+                2. Locate the `CCoDashboardAzureConnector.mez` file in the `ccodashboard/dashboards/CCODashboard-Infrastructure/` folder.
+                3. Copy the `CCoDashboardAzureConnector.mez` file to the Power BI default folder for custom connectors. This is typically located at `C:\Users%username%\Documents\Power BI Desktop\Custom Connectors`. If this folder does not exist, you will need to create it.
+                4. If you are experiencing issues with the connector and Power BI due to OneDrive, create the folder structure within the OneDrive folder at `....\Documents\Power BI Desktop\Custom Connectors`. After doing so, the custom connector should be recognized.
+                5. Open Power BI and go to Options. Under the Global category in the Security section, select (Not Recommended) Allow any extension to load without validation or warning and click OK.
+                
+                This process will install the custom connector required for the CCO Azure Infrastructure Dashboard to leverage information from Azure Management REST APIs.`
+              });
