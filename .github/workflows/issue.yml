@@ -74,6 +74,6 @@ jobs:
                 To install the custom connector for the CCO Azure Infrastructure Dashboard, follow these steps:
             
                 1. Ensure you have downloaded and installed the Microsoft Power BI Desktop Edition from the Microsoft Store as it is a prerequisite.
-                2. Locate the ``CCoDashboardAzureConnector.mez`` file in the ``ccodashboard/dashboards/CCODashboard-Infrastructure/`` folder.
+                2. Locate the \`CCoDashboardAzureConnector.mez\` file in the \`ccodashboard/dashboards/CCODashboard-Infrastructure/\` folder.
                 This process will install the custom connector required for the CCO Azure Infrastructure Dashboard to leverage information from Azure Management REST APIs.`
               });
