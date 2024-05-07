@@ -51,15 +51,17 @@ jobs:
 
       - name: Echo
         run: echo "${{ steps.run.outputs.answer }}"
-        
+
       - name: Response issue
         uses: actions/github-script@v6
         with:
           script: |
+            const answer = "${{ steps.run.outputs.answer }}";
+            const formattedAnswer = answer.replace(/\n/g, '\\n'); // Replace newline characters with '\n'
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: `### Answer: 
-            ${{ steps.run.outputs.answer }}
+            ${formattedAnswer}`
             });
