@@ -65,4 +65,5 @@ const chain = RunnableSequence.from([
 var result = await chain.invoke(input);
 
 console.dir(result);
+result = result.replace(/`/g, '``');
 core.setOutput('answer', result);

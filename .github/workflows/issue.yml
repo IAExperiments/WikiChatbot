@@ -1,84 +1,62 @@
 ---
-name: 🆘 Help wanted
-
-on:
-  issues:
-    types: [opened]
-
-jobs:
-  issue:
-    name: 🔍 Get inputs
-    if: ${{ contains(github.event.issue.labels.*.name, 'help wanted') }}
-    runs-on: ubuntu-latest
-    outputs:
-      helpneededwith: ${{ steps.inputs.outputs.help_needed_with }}
-      wiki: ${{ steps.inputs.outputs.documentation_page }}
-    steps:
-      - name: 📥 Get inputs
-        id: inputs
-        uses: drdonoso/issueform-get-inputs@main
-        with:
-          body: ${{ github.event.issue.body }}
-    
-  run:
-    needs: issue
-    runs-on: ubuntu-latest
-    name: 🚀 Run 
-    permissions:
-      issues: write
-    env:
-      AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
-      AZURE_OPENAI_ENDPOINT: ${{ vars.AZURE_OPENAI_API_ENDPOINT }}
-      AZURE_OPENAI_API_INSTANCE_NAME: ${{ vars.AZURE_OPENAI_API_INSTANCE_NAME }}
-      AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
-      WIKISITE: ${{ needs.issue.outputs.wiki || vars.WIKISITE }}
-    steps: 
-      - name: 🚀 Run
-        shell: bash
-        run: |
-          echo "Running the workflow"
-          echo "Help needed with: ${{ needs.issue.outputs.helpneededwith }}"
+  name: 🆘 Help wanted
+  
+  on:
+    issues:
+      types: [opened]
+  
+  jobs:
+    issue:
+      name: 🔍 Get inputs
+      if: ${{ contains(github.event.issue.labels.*.name, 'help wanted') }}
+      runs-on: ubuntu-latest
+      outputs:
+        helpneededwith: ${{ steps.inputs.outputs.help_needed_with }}
+        wiki: ${{ steps.inputs.outputs.documentation_page }}
+      steps:
+        - name: 📥 Get inputs
+          id: inputs
+          uses: drdonoso/issueform-get-inputs@main
+          with:
+            body: ${{ github.event.issue.body }}
       
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: NPM Install
-        run: npm install
-      
-      - name: Run script
-        id: run
-        run: node index.js "${{ needs.issue.outputs.helpneededwith }}"
-
-      - name: Sanitize output
-        id: sanitize
-        run: |
-          output=${${{ steps.run.outputs.stdout }}//\`/\\\`}
-          echo "Output: $output"
-          echo "output=$output" >> $GITHUB_OUTPUT
-
-      - name: Response issue
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: ${{ steps.sanitize.outputs.output }}
-            });
-
-      # - name: Response issue
-      #   uses: actions/github-script@v6
-      #   with:
-      #     script: |
-      #       github.rest.issues.createComment({
-      #         issue_number: context.issue.number,
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         body: `### Answer: 
-      #         To install the custom connector for the CCO Azure Infrastructure Dashboard, follow these steps:
-          
-      #         1. Ensure you have downloaded and installed the Microsoft Power BI Desktop Edition from the Microsoft Store as it is a prerequisite.
-      #         2. Locate the \`CCoDashboardAzureConnector.mez\` file in the \`ccodashboard/dashboards/CCODashboard-Infrastructure/\` folder.
-      #         This process will install the custom connector required for the CCO Azure Infrastructure Dashboard to leverage information from Azure Management REST APIs.`
-      #         });
+    run:
+      needs: issue
+      runs-on: ubuntu-latest
+      name: 🚀 Run 
+      permissions:
+        issues: write
+      env:
+        AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+        AZURE_OPENAI_ENDPOINT: ${{ vars.AZURE_OPENAI_API_ENDPOINT }}
+        AZURE_OPENAI_API_INSTANCE_NAME: ${{ vars.AZURE_OPENAI_API_INSTANCE_NAME }}
+        AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
+        WIKISITE: ${{ needs.issue.outputs.wiki || vars.WIKISITE }}
+      steps: 
+        - name: 🚀 Run
+          shell: bash
+          run: |
+            echo "Running the workflow"
+            echo "Help needed with: ${{ needs.issue.outputs.helpneededwith }}"
+        
+        - name: Checkout
+          uses: actions/checkout@v2
+  
+        - name: NPM Install
+          run: npm install
+        
+        - name: Run script
+          id: run
+          run: node index.js "${{ needs.issue.outputs.helpneededwith }}"
+  
+        - name: Response issue
+          uses: actions/github-script@v6
+          with:
+            script: |
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `### Answer: 
+                ${{ steps.run.outputs.answer }}`
+              });
