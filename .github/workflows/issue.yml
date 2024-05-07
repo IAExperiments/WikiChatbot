@@ -53,10 +53,11 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
+            const answer = `${{steps.run.outputs.answer}}`.replace(/`/g, '\\`');
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: `### Answer: 
-                \`${{steps.run.outputs.answer}}``
+                \`${answer}\``
             });
