@@ -49,8 +49,8 @@ jobs:
         id: run
         run: node index.js "${{ needs.issue.outputs.helpneededwith }}"
 
-      - name: Echo
-        run: echo "${{ steps.run.outputs.answer }}"
+      - name: Echo 1
+        run: echo ${{ steps.run.outputs.answer }}
 
       - name: Response issue
         uses: actions/github-script@v6
