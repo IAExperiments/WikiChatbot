@@ -53,26 +53,10 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const answer = "${{ steps.run.outputs.answer }}".replace(/`/g, /\`/g);
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: `### Answer: 
-                ${answer}`
-            });
-
-
-      - name: Response issue 2
-        if: always()
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const output = `${{ steps.run.outputs.answer }}`;
-            const answer = output.replace(/`/g, '\\`');
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `### Answer: \n${answer}`
+                \`${{steps.run.outputs.answer}}``
             });
