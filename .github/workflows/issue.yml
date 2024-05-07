@@ -49,15 +49,17 @@ jobs:
         id: run
         run: node index.js "${{ needs.issue.outputs.helpneededwith }}"
 
+      - name: Echo
+        run: echo "${{ steps.run.outputs.answer }}"
+        
       - name: Response issue
         uses: actions/github-script@v6
         with:
           script: |
-            let answer = `${{ steps.run.outputs.answer }}`;
-            answer = answer.replace(/`/g, '\\`');
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `### Answer: \n${answer}`
+              body: `### Answer: 
+            ${{ steps.run.outputs.answer }}
             });
