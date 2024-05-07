@@ -53,25 +53,10 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
+            const answer = `### Answer: \n${{ steps.run.outputs.answer }}`;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `### Answer: 
-              ${{ steps.run.outputs.answer }}`
+              body: answer
             });
-  # close:
-  #   needs: run
-  #   name: ✔️ Close issue
-  #   runs-on: ubuntu-22.04
-  #   steps:
-  #     - name: ✍️ Close issue
-  #       uses: actions/github-script@v6
-  #       with:
-  #         script: |
-  #           github.rest.issues.createComment({
-  #             issue_number: context.issue.number,
-  #             owner: context.repo.owner,
-  #             repo: context.repo.repo,
-  #             body: '### Answer here:',
-  #           });
