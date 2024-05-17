@@ -6,22 +6,22 @@
       types: [opened]
   
   jobs:
-    issue:
-      name: 🔍 Get inputs
-      if: ${{ contains(github.event.issue.labels.*.name, 'help wanted') }}
-      runs-on: ubuntu-latest
-      outputs:
-        helpneededwith: ${{ steps.inputs.outputs.help_needed_with }}
-        wiki: ${{ steps.inputs.outputs.documentation_page }}
-      steps:
-        - name: 📥 Get inputs
-          id: inputs
-          uses: drdonoso/issueform-get-inputs@main
-          with:
-            body: ${{ github.event.issue.body }}
+    # issue:
+    #   name: 🔍 Get inputs
+    #   if: ${{ contains(github.event.issue.labels.*.name, 'help wanted') }}
+    #   runs-on: ubuntu-latest
+    #   outputs:
+    #     helpneededwith: ${{ steps.inputs.outputs.help_needed_with }}
+    #     wiki: ${{ steps.inputs.outputs.documentation_page }}
+    #   steps:
+    #     - name: 📥 Get inputs
+    #       id: inputs
+    #       uses: drdonoso/issueform-get-inputs@main
+    #       with:
+    #         body: ${{ github.event.issue.body }}
       
     run:
-      needs: issue
+      # needs: issue
       runs-on: ubuntu-latest
       name: 🚀 Run 
       permissions:
@@ -31,13 +31,15 @@
         AZURE_OPENAI_ENDPOINT: ${{ vars.AZURE_OPENAI_API_ENDPOINT }}
         AZURE_OPENAI_API_INSTANCE_NAME: ${{ vars.AZURE_OPENAI_API_INSTANCE_NAME }}
         AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
-        WIKISITE: ${{ needs.issue.outputs.wiki || vars.WIKISITE }}
       steps: 
-        - name: 🚀 Run
+        - name: 🚀 Start
           shell: bash
+          id: start
           run: |
             echo "Running the workflow"
-            echo "Help needed with: ${{ needs.issue.outputs.helpneededwith }}"
+            body=$(echo "${{ github.event.issue.body }}" | tr -d '\n')
+            echo "Help needed with: $body"
+            echo "raw_body=${{ github.event.issue.body }}" >> $GITHUB_OUTPUT
         
         - name: Checkout
           uses: actions/checkout@v2
@@ -47,7 +49,7 @@
         
         - name: Run script
           id: run
-          run: node index.js "${{ needs.issue.outputs.helpneededwith }}"
+          run: node index.js "${{ steps.start.outputs.body }}"
   
         - name: Response issue
           uses: actions/github-script@v6
@@ -58,5 +60,5 @@
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 body: `### Answer: 
-                ${{ steps.run.outputs.answer }}`
+                ${{ steps.run.outputs.answer }}git
               });
