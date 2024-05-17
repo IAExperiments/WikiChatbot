@@ -38,8 +38,7 @@
           run: |
             echo "Running the workflow"
             body=$(echo "${{ github.event.issue.body }}" | tr -d '\n')
-            echo "Help needed with: $body"
-            echo "raw_body=${{ github.event.issue.body }}" >> $GITHUB_OUTPUT
+            echo "raw_body="${{ github.event.issue.body }}"" >> $GITHUB_OUTPUT
         
         - name: Checkout
           uses: actions/checkout@v2
