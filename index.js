@@ -12,7 +12,7 @@ import {
 } from "@langchain/core/runnables";
 import loadfromurlarray from "./scraper.js";
 import loadWebUrlsfromEnvironment from "./envloader.js";
-import websites from "./wikis.json";
+import websites from "./wikis.json" assert {type: 'json'};
 
 import * as core from '@actions/core';
 const __filename = fileURLToPath(import.meta.url);
