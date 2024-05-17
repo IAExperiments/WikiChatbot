@@ -48,7 +48,7 @@
         
         - name: Run script
           id: run
-          run: node index.js "${{ steps.start.outputs.body }}"
+          run: node index.js "${{ steps.start.outputs.raw_body }}"
   
         - name: Response issue
           uses: actions/github-script@v6
