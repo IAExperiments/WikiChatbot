@@ -39,7 +39,7 @@
             echo "Help needed with: ${{ needs.issue.outputs.helpneededwith }}"
         
         - name: Checkout
-          uses: actions/checkout@v2
+          uses: actions/checkout@v3
   
         - name: NPM Install
           run: npm install

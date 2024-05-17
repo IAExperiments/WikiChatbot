@@ -12,6 +12,7 @@ import {
 } from "@langchain/core/runnables";
 import loadfromurlarray from "./scraper.js";
 import loadWebUrlsfromEnvironment from "./envloader.js";
+import websites from "./wikis.json";
 
 import * as core from '@actions/core';
 const __filename = fileURLToPath(import.meta.url);
@@ -20,7 +21,6 @@ const __dirname = path.dirname(__filename);
 
 
 var question = process.argv.pop();
-var websites = loadWebUrlsfromEnvironment();
 console.log("question: " + question);
 function loadPrompt(){
   const filePath = path.join(__dirname,'ragprompt.txt');
@@ -28,7 +28,6 @@ function loadPrompt(){
 }
 
 //Indexer
-
 
 const input = `Question: ${question}`;
 const docs = await loadfromurlarray(websites);
