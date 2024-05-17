@@ -1,5 +1,3 @@
-import "cheerio";
-import { CheerioWebBaseLoader } from "langchain/document_loaders/web/cheerio";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { MemoryVectorStore } from "langchain/vectorstores/memory"
 import { OpenAIEmbeddings, ChatOpenAI } from "@langchain/openai";
@@ -12,26 +10,28 @@ import {
   RunnableSequence,
   RunnablePassthrough,
 } from "@langchain/core/runnables";
+import loadfromurlarray from "./scraper.js";
+import loadWebUrlsfromEnvironment from "./envloader.js";
 
 import * as core from '@actions/core';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
+
 var question = process.argv.pop();
-var wikisite = process.env.WIKISITE || "";
+var websites = loadWebUrlsfromEnvironment();
 console.log("question: " + question);
-console.log("Wikisite: " + wikisite);
 function loadPrompt(){
   const filePath = path.join(__dirname,'ragprompt.txt');
   return fs.readFileSync(filePath, 'utf8');
 }
 
 //Indexer
-const loader = new CheerioWebBaseLoader(wikisite);
+
 
 const input = `Question: ${question}`;
-const docs = await loader.load();
+const docs = await loadfromurlarray(websites);
 
 const textSplitter = new RecursiveCharacterTextSplitter(
   { chunkSize: 1000, 
