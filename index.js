@@ -11,18 +11,16 @@ import {
   RunnablePassthrough,
 } from "@langchain/core/runnables";
 import loadfromurlarray from "./scraper.js";
-import { loadWebUrlsfromEnvironment, loadBaseImagePath, getEmbeddingsDeploymentName }  from "./envloader.js";
-
-
+import { loadWebUrlsfromEnvironment, loadBaseImagePath }  from "./envloader.js";
+import websites from "./wikis.json" assert {type: 'json'};
 import * as core from '@actions/core';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
 
 var question = process.argv.pop();
-var websites = loadWebUrlsfromEnvironment();
-var imagebaseUrl = loadBaseImagePath();
 console.log("question: " + question);
 function loadPrompt(){
   const filePath = path.join(__dirname,'ragprompt.txt');
@@ -31,13 +29,12 @@ function loadPrompt(){
 
 //Indexer
 
-
 const input = `Question: ${question}`;
-const docs = await loadfromurlarray(imagebaseUrl, websites);
+const docs = await loadfromurlarray(loadBaseImagePath(), websites);
 const textSplitter = new RecursiveCharacterTextSplitter(
-  { chunkSize: 1000, 
-    chunkOverlap: 200
-   });
+{ chunkSize: 1000, 
+  chunkOverlap: 200
+  });
 const splits = await textSplitter.splitDocuments(docs);
 
 const vectorStore = await MemoryVectorStore.fromDocuments(splits, new OpenAIEmbeddings());
