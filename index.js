@@ -11,7 +11,8 @@ import {
   RunnablePassthrough,
 } from "@langchain/core/runnables";
 import loadfromurlarray from "./scraper.js";
-import loadWebUrlsfromEnvironment from "./envloader.js";
+import { loadWebUrlsfromEnvironment, loadBaseImagePath, getEmbeddingsDeploymentName }  from "./envloader.js";
+
 
 import * as core from '@actions/core';
 const __filename = fileURLToPath(import.meta.url);
@@ -21,6 +22,7 @@ const __dirname = path.dirname(__filename);
 
 var question = process.argv.pop();
 var websites = loadWebUrlsfromEnvironment();
+var imagebaseUrl = loadBaseImagePath();
 console.log("question: " + question);
 function loadPrompt(){
   const filePath = path.join(__dirname,'ragprompt.txt');
@@ -31,15 +33,14 @@ function loadPrompt(){
 
 
 const input = `Question: ${question}`;
-const docs = await loadfromurlarray(websites);
-
+const docs = await loadfromurlarray(imagebaseUrl, websites);
 const textSplitter = new RecursiveCharacterTextSplitter(
   { chunkSize: 1000, 
     chunkOverlap: 200
    });
 const splits = await textSplitter.splitDocuments(docs);
 
-const vectorStore = await MemoryVectorStore.fromDocuments(splits, new OpenAIEmbeddings({ azureOpenAIApiEmbeddingsDeploymentName : 'embbedcalc'}));
+const vectorStore = await MemoryVectorStore.fromDocuments(splits, new OpenAIEmbeddings());
 
 // Retrieve and generate using the relevant snippets of the blog.
 const retriever = vectorStore.asRetriever();
@@ -51,7 +52,7 @@ const model = new ChatOpenAI({
  const retrievedDocs = await retriever.getRelevantDocuments(input);
 
  const serializeDocs = (docs) => docs.map((doc) => doc.pageContent).join("\n");
-
+ console.log("Sending to OpenAi:")
 const chain = RunnableSequence.from([
   {
     context: retriever.pipe(serializeDocs),
@@ -63,7 +64,7 @@ const chain = RunnableSequence.from([
 ]);
 
 var result = await chain.invoke(input);
-
+console.log("OpenAi Response:")
 console.dir(result);
 result = result.replace(/\\/g, '\\\\');
 result = result.replace(/`/g, '\\`');
