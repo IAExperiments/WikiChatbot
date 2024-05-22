@@ -23,16 +23,22 @@ The wiki that we are using is the [Spanish Omelete Recipe](https://github.com/IA
 We are using nodejs v20.11.0 in our local development environment (we haven't tested with other versions). To run the application locally, you need to have the following environment variables set, you can set them in a `.env` file in the root of the project or use something like the sample bash exports. The variables are the following:
 
 ```bash
-export OPENAI_API_KEY=your_openai_api_key
+export AZURE_OPENAI_API_KEY=your_openai_api_key
 export AZURE_OPENAI_API_ENDPOINT=https://yourdeploymentNAME.openai.azure.com/
 export AZURE_OPENAI_API_VERSION=2023-03-15-preview
 export AZURE_OPENAI_API_INSTANCE_NAME=YourInstanceName
+export AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME=Your embeddings deployment name
+BASEIMAGEURL=YOUR WIKI URL for render the images
+WEBSITE_1=https://github.com/yourUser/YourRepo/wiki
+...
+WEBSITE_12=https://github.com/yourUser/YourRepoN/wiki
+
 ```
 
 Then you can run the application with the following command:
 
 ```bash
-node index.js "What is the recipe for a spanish omelete?"
+node index.js "Your question"
 ```
 
 ![local execution asking how to cook tortilla](./docs/local.png)

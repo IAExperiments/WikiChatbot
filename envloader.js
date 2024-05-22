@@ -1,12 +1,28 @@
+import fs from "fs"
+import path from 'path'
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 export function loadWebUrlsfromEnvironment(){
-const envVariables = process.env;
-const websiteVariables = Object.keys(envVariables)
-    .filter(key => key.startsWith('WEBSITE_'))
-    .map(key => `${envVariables[key]}`);
-console.log("Website urls ----------------------")
-console.dir(websiteVariables, {depth : 1000});
-console.log("----------------------")
- return websiteVariables;
+    var wikifile = path.join(__dirname,'wikis.json');
+    if (fs.existsSync(wikifile)){
+        const websites = JSON.parse(fs.readFileSync(wikifile, {}));
+        console.log("Website urls loaded from file ----------------------")
+        console.dir(websites, {depth : 1000});
+        console.log("----------------------")
+        return websites;
+    } else {
+        const envVariables = process.env;
+        const websiteVariables = Object.keys(envVariables)
+            .filter(key => key.startsWith('WEBSITE'))
+            .map(key => `${envVariables[key]}`);
+        console.log("Website urls from environment ---------------------")
+        console.dir(websiteVariables, {depth : 1000});
+        console.log("----------------------")
+        return websiteVariables;
+    }
 }
 
 export function loadBaseImagePath(){

@@ -12,13 +12,13 @@ import {
 } from "@langchain/core/runnables";
 import loadfromurlarray from "./scraper.js";
 import { loadWebUrlsfromEnvironment, loadBaseImagePath }  from "./envloader.js";
-import websites from "./wikis.json" assert {type: 'json'};
 import * as core from '@actions/core';
+
+const websites = loadWebUrlsfromEnvironment()
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-
 
 var question = process.argv.pop();
 console.log("question: " + question);
