@@ -1,0 +1,60 @@
+---
+name: Answer issue
+
+on:
+  workflow_call:
+    inputs:
+      query: 
+        required: true
+        type: string
+      AZURE_OPENAI_API_KEY:
+        required: true
+        type: string
+      AZURE_OPENAI_API_ENDPOINT:
+        required: true
+        type: string
+      AZURE_OPENAI_API_INSTANCE_NAME:
+        required: true
+        type: string
+      AZURE_OPENAI_API_VERSION:
+        required: true
+        type: string
+      AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME:
+        required: true
+        type: string
+      BASEIMAGEURL:
+        required: true
+        type: string
+jobs:
+  run:
+    env:
+      query: ${{ inputs.query }}
+      AZURE_OPENAI_API_KEY: ${{ inputs.AZURE_OPENAI_API_KEY }}
+      AZURE_OPENAI_ENDPOINT: ${{ inputs.AZURE_OPENAI_API_ENDPOINT }}
+      AZURE_OPENAI_API_INSTANCE_NAME: ${{ inputs.AZURE_OPENAI_API_INSTANCE_NAME }}
+      AZURE_OPENAI_API_VERSION: ${{ inputs.AZURE_OPENAI_API_VERSION }}
+      AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME: ${{ inputs.AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME }}
+      BASEIMAGEURL: ${{ inputs.BASEIMAGEURL }}
+    runs-on: ubuntu-latest
+    steps:  
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: NPM Install
+        run: npm install
+      
+      - name: Run script
+        id: run
+        run: node index.js "${{ inputs.query }}"
+
+      - name: Response issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `### Answer: 
+              ${{ steps.run.outputs.answer }}git
+            });
