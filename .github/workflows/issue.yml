@@ -30,7 +30,7 @@ jobs:
     uses: IAExperiments/WikiChatbot/.github/workflows/reusable-workflow.yml@main
     secrets: 
       AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
       query: ${{ needs.run.outputs.raw_body }}
       AZURE_OPENAI_API_ENDPOINT: ${{ vars.AZURE_OPENAI_API_ENDPOINT }}
