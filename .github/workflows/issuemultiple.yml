@@ -1,63 +1,34 @@
-# ---
-#   name: 🆘 Help wanted MultipleWiki
+---
+  name: 🆘 Help wanted MultipleWiki
   
-#   on:
-#     issues:
-#       types: [opened]
+  on:
+    issues:
+      types: [opened]
   
-#   jobs:
-#     issue:
-#       name: 🔍 Get inputs
-#       if: ${{ contains(github.event.issue.labels.*.name, 'help wanted') }}
-#       runs-on: ubuntu-latest
-#       outputs:
-#         helpneededwith: ${{ steps.inputs.outputs.help_needed_with }}
-#         wiki: ${{ steps.inputs.outputs.documentation_page }}
-#       steps:
-#         - name: 📥 Get inputs
-#           id: inputs
-#           uses: drdonoso/issueform-get-inputs@main
-#           with:
-#             body: ${{ github.event.issue.body }}
+  jobs:
+    issue:
+      name: 🔍 Get inputs
+      if: ${{ contains(github.event.issue.labels.*.name, 'help wanted') }}
+      runs-on: ubuntu-latest
+      outputs:
+        helpneededwith: ${{ steps.inputs.outputs.help_needed_with }}
+        wiki: ${{ steps.inputs.outputs.documentation_page }}
+      steps:
+        - name: 📥 Get inputs
+          id: inputs
+          uses: drdonoso/issueform-get-inputs@main
+          with:
+            body: ${{ github.event.issue.body }}
       
-#     run:
-#       needs: issue
-#       runs-on: ubuntu-latest
-#       name: 🚀 Run 
-#       permissions:
-#         issues: write
-#       env:
-#         AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
-#         AZURE_OPENAI_ENDPOINT: ${{ vars.AZURE_OPENAI_API_ENDPOINT }}
-#         AZURE_OPENAI_API_INSTANCE_NAME: ${{ vars.AZURE_OPENAI_API_INSTANCE_NAME }}
-#         AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
-#         AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME }}
-#         BASEIMAGEURL: ${{ vars.BASEIMAGEURL }}
-#       steps: 
-#         - name: 🚀 Run
-#           shell: bash
-#           run: |
-#             echo "Running the workflow"
-#             echo "Help needed with: ${{ needs.issue.outputs.helpneededwith }}"
-        
-#         - name: Checkout
-#           uses: actions/checkout@v3
-  
-#         - name: NPM Install
-#           run: npm install
-        
-#         - name: Run script
-#           id: run
-#           run: node index.js "${{ needs.issue.outputs.helpneededwith }}"
-  
-#         - name: Response issue
-#           uses: actions/github-script@v6
-#           with:
-#             script: |
-#               github.rest.issues.createComment({
-#                 issue_number: context.issue.number,
-#                 owner: context.repo.owner,
-#                 repo: context.repo.repo,
-#                 body: `### Answer: 
-#                 ${{ steps.run.outputs.answer }}`
-#               });
+    execute:
+      needs: issue
+      uses: IAExperiments/WikiChatbot/.github/workflows/reusable-workflow.yml@main
+      secrets: 
+        AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+      with:
+        query: ${{ needs.issue.outputs.helpneededwith }}
+        AZURE_OPENAI_API_ENDPOINT: ${{ vars.AZURE_OPENAI_API_ENDPOINT }}
+        AZURE_OPENAI_API_INSTANCE_NAME: ${{ vars.AZURE_OPENAI_API_INSTANCE_NAME }}
+        AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
+        AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME }}
+        BASEIMAGEURL: ${{ vars.BASEIMAGEURL }}
