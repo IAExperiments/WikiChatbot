@@ -25,6 +25,8 @@ on:
     secrets:
       AZURE_OPENAI_API_KEY: 
         required: true
+      GITHUB_TOKEN:
+        required: true
 jobs:
   run:
     env:
@@ -35,26 +37,34 @@ jobs:
       AZURE_OPENAI_API_VERSION: ${{ inputs.AZURE_OPENAI_API_VERSION }}
       AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME: ${{ inputs.AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME }}
       BASEIMAGEURL: ${{ inputs.BASEIMAGEURL }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     runs-on: ubuntu-latest
     steps:  
-      - name: Checkout
-        uses: actions/checkout@v2
+      # - name: Checkout
+      #   uses: actions/checkout@v2
 
-      - name: NPM Install
-        run: npm install
+      # - name: NPM Install
+      #   run: npm install
       
-      - name: Run script
-        id: run
-        run: node index.js "${{ inputs.query }}"
+      # - name: Run script
+      #   id: run
+      #   run: node index.js "${{ inputs.query }}"
 
       - name: Response issue
         uses: actions/github-script@v6
         with:
           script: |
+            # github.rest.issues.createComment({
+            #   issue_number: context.issue.number,
+            #   owner: context.repo.owner,
+            #   repo: context.repo.repo,
+            #   body: `### Answer: 
+            #   ${{ steps.run.outputs.answer }}`
+            # });
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `### Answer: 
-              ${{ steps.run.outputs.answer }}`
+              body: `### Answer: patata`
             });
