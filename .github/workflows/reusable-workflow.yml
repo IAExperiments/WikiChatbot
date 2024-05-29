@@ -56,7 +56,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 body: `### Answer: 
-                ${{ steps.run.outputs.answer }}`
+              ${{ steps.run.outputs.answer }}`
               });
     
 
