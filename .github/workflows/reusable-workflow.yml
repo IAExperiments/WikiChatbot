@@ -45,7 +45,9 @@ jobs:
           path: WikiChatbot
 
       - name: NPM Install
-        run: npm install -w WikiChatbot
+        run: |
+          ls -la
+          npm install -w WikiChatbot/
       
       - name: Run script
         id: run
