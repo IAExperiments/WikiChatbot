@@ -49,7 +49,7 @@ jobs:
       
       - name: Run script
         id: run
-        run: node index.js "${{ inputs.query }}"
+        run: cd WikiChatbot && node index.js "${{ inputs.query }}"
 
       - name: Response issue
         uses: actions/github-script@v6
