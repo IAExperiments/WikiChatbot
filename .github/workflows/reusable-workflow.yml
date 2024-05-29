@@ -37,32 +37,27 @@ jobs:
       BASEIMAGEURL: ${{ inputs.BASEIMAGEURL }}
     runs-on: ubuntu-latest
     steps:  
-      # - name: Checkout
-      #   uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      # - name: NPM Install
-      #   run: npm install
+      - name: NPM Install
+        run: npm install
       
-      # - name: Run script
-      #   id: run
-      #   run: node index.js "${{ inputs.query }}"
+      - name: Run script
+        id: run
+        run: node index.js "${{ inputs.query }}"
 
       - name: Response issue
         uses: actions/github-script@v6
         with:
           script: |
             github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `### Answer: patata`
-            });
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `### Answer: 
+                ${{ steps.run.outputs.answer }}`
+              });
+    
 
 
-        # github.rest.issues.createComment({
-          #   issue_number: context.issue.number,
-          #   owner: context.repo.owner,
-          #   repo: context.repo.repo,
-          #   body: `### Answer: 
-          #   ${{ steps.run.outputs.answer }}`
-          # });
