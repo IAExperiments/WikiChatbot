@@ -13,6 +13,7 @@ permissions:
 
 jobs:    
   run:
+    if: contains(fromJSON('["${{ join('", "', github.event.issue.labels.*.name) }}"]'), 'bug')
     runs-on: ubuntu-latest
     name: 🚀 Run 
     permissions:
