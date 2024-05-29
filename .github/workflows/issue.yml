@@ -1,50 +1,52 @@
 ---
-  name: 🆘 Help wanted
-  
-  on:
-    issues:
-      types: [opened]
-  
-  jobs:
-    # issue:
-    #   name: 🔍 Get inputs
-    #   if: ${{ contains(github.event.issue.labels.*.name, 'help wanted') }}
-    #   runs-on: ubuntu-latest
-    #   outputs:
-    #     helpneededwith: ${{ steps.inputs.outputs.help_needed_with }}
-    #     wiki: ${{ steps.inputs.outputs.documentation_page }}
-    #   steps:
-    #     - name: 📥 Get inputs
-    #       id: inputs
-    #       uses: drdonoso/issueform-get-inputs@main
-    #       with:
-    #         body: ${{ github.event.issue.body }}
-      
-    run:
-      # needs: issue
-      runs-on: ubuntu-latest
-      name: 🚀 Run 
-      permissions:
-        issues: write
-      outputs:
-        raw_body: ${{ steps.start.outputs.raw_body }}
-      steps: 
-        - name: 🚀 Start
-          shell: bash
-          id: start
-          run: |
-            echo "Running the workflow"
-            body=$(echo "${{ github.event.issue.body }}" | tr -d '\n')
-            echo "raw_body=$body" >> $GITHUB_OUTPUT
+name: 🆘 Help wanted
 
-    execute:
-      needs: run
-      uses: IAExperiments/WikiChatbot/.github/workflows/reusable-workflow.yml@main
-      with:
-        query: ${{ needs.run.outputs.raw_body }}
-        AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
-        AZURE_OPENAI_ENDPOINT: ${{ vars.AZURE_OPENAI_API_ENDPOINT }}
-        AZURE_OPENAI_API_INSTANCE_NAME: ${{ vars.AZURE_OPENAI_API_INSTANCE_NAME }}
-        AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
-        AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME }}
-        BASEIMAGEURL: ${{ vars.BASEIMAGEURL }}
+on:
+  issues:
+    types: [opened]
+env:
+  AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+jobs:
+  # issue:
+  #   name: 🔍 Get inputs
+  #   if: ${{ contains(github.event.issue.labels.*.name, 'help wanted') }}
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     helpneededwith: ${{ steps.inputs.outputs.help_needed_with }}
+  #     wiki: ${{ steps.inputs.outputs.documentation_page }}
+  #   steps:
+  #     - name: 📥 Get inputs
+  #       id: inputs
+  #       uses: drdonoso/issueform-get-inputs@main
+  #       with:
+  #         body: ${{ github.event.issue.body }}
+    
+  run:
+    # needs: issue
+    runs-on: ubuntu-latest
+    name: 🚀 Run 
+    permissions:
+      issues: write
+    outputs:
+      raw_body: ${{ steps.start.outputs.raw_body }}
+    steps: 
+      - name: 🚀 Start
+        shell: bash
+        id: start
+        run: |
+          echo "Running the workflow"
+          body=$(echo "${{ github.event.issue.body }}" | tr -d '\n')
+          echo "raw_body=$body" >> $GITHUB_OUTPUT
+
+  execute:
+    needs: run
+    uses: IAExperiments/WikiChatbot/.github/workflows/reusable-workflow.yml@main
+    secrets: 
+      AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+    with:
+      query: ${{ needs.run.outputs.raw_body }}
+      AZURE_OPENAI_ENDPOINT: ${{ vars.AZURE_OPENAI_API_ENDPOINT }}
+      AZURE_OPENAI_API_INSTANCE_NAME: ${{ vars.AZURE_OPENAI_API_INSTANCE_NAME }}
+      AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
+      AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME }}
+      BASEIMAGEURL: ${{ vars.BASEIMAGEURL }}

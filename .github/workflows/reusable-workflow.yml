@@ -7,9 +7,6 @@ on:
       query: 
         required: true
         type: string
-      AZURE_OPENAI_API_KEY:
-        required: true
-        type: string
       AZURE_OPENAI_API_ENDPOINT:
         required: true
         type: string
@@ -25,11 +22,14 @@ on:
       BASEIMAGEURL:
         required: true
         type: string
+    secrets:
+      AZURE_OPENAI_API_KEY: 
+        required: true
 jobs:
   run:
     env:
       query: ${{ inputs.query }}
-      AZURE_OPENAI_API_KEY: ${{ inputs.AZURE_OPENAI_API_KEY }}
+      AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
       AZURE_OPENAI_ENDPOINT: ${{ inputs.AZURE_OPENAI_API_ENDPOINT }}
       AZURE_OPENAI_API_INSTANCE_NAME: ${{ inputs.AZURE_OPENAI_API_INSTANCE_NAME }}
       AZURE_OPENAI_API_VERSION: ${{ inputs.AZURE_OPENAI_API_VERSION }}
