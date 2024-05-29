@@ -38,14 +38,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:  
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          repository: IAExperiments/WikiChatbot
+          ref: main
+          path: WikiChatbot
 
       - name: NPM Install
-        run: npm install
+        run: npm install -w WikiChatbot
       
       - name: Run script
         id: run
-        run: node index.js "${{ inputs.query }}"
+        run: node WikiChatbot/index.js "${{ inputs.query }}"
 
       - name: Response issue
         uses: actions/github-script@v6
