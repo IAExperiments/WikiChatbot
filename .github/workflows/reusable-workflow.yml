@@ -49,9 +49,12 @@ jobs:
       
       - name: Run script
         env:
-          BODY: ${{ inputs.query }}  
+          QUESTION: ${{ inputs.query }}  
         id: run
-        run: cd WikiChatbot && node index.js $BODY
+        run: |
+          cd WikiChatbot 
+          echo $QUESTION
+          node index.js $QUESTION
 
       - name: Response issue
         uses: actions/github-script@v6
