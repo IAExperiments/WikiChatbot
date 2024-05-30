@@ -48,8 +48,10 @@ jobs:
         run: cd WikiChatbot && npm install
       
       - name: Run script
+        env:
+          BODY: ${{ inputs.query }}  
         id: run
-        run: cd WikiChatbot && node index.js "${{ inputs.query }}"
+        run: cd WikiChatbot && node index.js $BODY
 
       - name: Response issue
         uses: actions/github-script@v6
