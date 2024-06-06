@@ -43,8 +43,7 @@ const vectorStore = await MemoryVectorStore.fromDocuments(splits, new OpenAIEmbe
 const retriever = vectorStore.asRetriever();
 const prompt =  PromptTemplate.fromTemplate(loadPrompt());
 const model = new ChatOpenAI({      
-  azureOpenAIApiDeploymentName : 'gpt4Preview',
-    temperature: 0 });
+  temperature: 0 });
 
  const retrievedDocs = await retriever.getRelevantDocuments(input);
 
