@@ -22,6 +22,9 @@ on:
       AZURE_OPENAI_API_DEPLOYMENT_NAME:
         required: true
         type: string
+      AZURE_OPENAI_API_VISION_DEPLOYMENT_NAME:
+        required: true
+        type: string
       BASEIMAGEURL:
         required: true
         type: string
@@ -38,6 +41,7 @@ jobs:
       AZURE_OPENAI_API_VERSION: ${{ inputs.AZURE_OPENAI_API_VERSION }}
       AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME: ${{ inputs.AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME }}
       AZURE_OPENAI_API_DEPLOYMENT_NAME: ${{ inputs.AZURE_OPENAI_API_DEPLOYMENT_NAME }}
+      AZURE_OPENAI_API_VISION_DEPLOYMENT_NAME: ${{ inputs.AZURE_OPENAI_API_VISION_DEPLOYMENT_NAME }}
       BASEIMAGEURL: ${{ inputs.BASEIMAGEURL }}
     runs-on: ubuntu-latest
     steps:  

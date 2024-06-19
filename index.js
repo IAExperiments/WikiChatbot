@@ -13,6 +13,7 @@ import {
 import loadfromurlarray from "./scraper.js";
 import { loadWebUrlsfromEnvironment, loadBaseImagePath }  from "./envloader.js";
 import * as core from '@actions/core';
+import imageDescriptor from './imageDescriptor.js'
 
 const websites = loadWebUrlsfromEnvironment()
 
@@ -27,9 +28,40 @@ function loadPrompt(){
   return fs.readFileSync(filePath, 'utf8');
 }
 
-//Indexer
 
-const input = `Question: ${question}`;
+function extractandsanitizeMarkdown(markdownContent) {
+  // Expresión regular para encontrar las imágenes en Markdown
+  const imageLinkPattern = /!\[.*?\]\((.*?)\)/g;
+  
+  // Extraer los enlaces de las imágenes
+  const imageLinks = [];
+  let match;
+  
+  while ((match = imageLinkPattern.exec(markdownContent)) !== null) {
+      imageLinks.push(match[1]);
+  }
+
+  // Eliminar las imágenes del contenido de Markdown
+  const sanitizedContent = markdownContent.replace(imageLinkPattern, '');
+
+  return {
+      sanitizedContent,
+      imageLinks
+  };
+}
+
+//TestImage
+let imageDescriptions = [];
+const inputsanitized  = extractandsanitizeMarkdown(question);
+for (let i =0; i< inputsanitized.imageLinks.length; i++){
+  imageDescriptions[i] = await imageDescriptor(inputsanitized.imageLinks[i]);
+}
+console.log("Screenshots descriptions");
+console.dir(imageDescriptions, {depth:1000});
+
+//Indexer
+const input = `Question: ${inputsanitized.sanitizedContent}` ;
+console.log(input);
 const docs = await loadfromurlarray(loadBaseImagePath(), websites);
 const textSplitter = new RecursiveCharacterTextSplitter(
 { chunkSize: 1000, 
@@ -37,29 +69,33 @@ const textSplitter = new RecursiveCharacterTextSplitter(
   });
 const splits = await textSplitter.splitDocuments(docs);
 
+console.log("Hydrating Vector Database with documents ----------------------")
 const vectorStore = await MemoryVectorStore.fromDocuments(splits, new OpenAIEmbeddings());
 
 // Retrieve and generate using the relevant snippets of the blog.
 const retriever = vectorStore.asRetriever();
-const prompt =  PromptTemplate.fromTemplate(loadPrompt());
+console.log("End Hydration ----------------------")
+let promptTpl = loadPrompt();
+promptTpl = promptTpl.replace("{images}", imageDescriptions.join(".\n"));
+const prompt =  PromptTemplate.fromTemplate(promptTpl);
 const model = new ChatOpenAI({      
   temperature: 0 });
-
  const retrievedDocs = await retriever.getRelevantDocuments(input);
-
  const serializeDocs = (docs) => docs.map((doc) => doc.pageContent).join("\n");
  console.log("Sending to OpenAi:")
-const chain = RunnableSequence.from([
+  const chain = RunnableSequence.from([
   {
     context: retriever.pipe(serializeDocs),
-    question: new RunnablePassthrough()
+    question: new RunnablePassthrough(),
   },
   prompt,
   model,
   new StringOutputParser(),
 ]);
 
-var result = await chain.invoke(input);
+const inputOAI = `question: ${inputsanitized.sanitizedContent}`;
+
+var result = await chain.invoke(inputOAI);
 console.log("OpenAi Response:")
 console.dir(result);
 result = result.replace(/\\/g, '\\\\');

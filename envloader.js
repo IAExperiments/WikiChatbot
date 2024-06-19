@@ -36,3 +36,7 @@ export function loadBaseImagePath(){
 export function getEmbeddingsDeploymentName(){
     return process.env.AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME;
 }
+
+export function getImagesDescriptorDeploymentName(){
+    return process.env.AZURE_OPENAI_API_VISION_DEPLOYMENT_NAME;
+}
