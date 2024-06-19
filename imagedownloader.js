@@ -33,7 +33,7 @@ export default async function downloadImage(url, output) {
 
         const contentType = response.headers['content-type'];
         if (!validMimeTypes.includes(contentType)) {
-            throw new Error('El archivo no es una imagen válida');
+            throw new Error('File is not a valid Image');
         }
 
         const extension = contentType.split('/')[1];
@@ -45,7 +45,7 @@ export default async function downloadImage(url, output) {
         return new Promise((resolve, reject) => {
             fileStream.on('finish', () => {
                 fileStream.close();
-                console.log('Imagen descargada correctamente:', filePath);
+                console.log('Image downloaded at:', filePath);
                 resolve(filePath);
             });
 
@@ -55,7 +55,7 @@ export default async function downloadImage(url, output) {
             });
         });
     } catch (error) {
-        console.error('Error al descargar la imagen:', error.message);
+        console.error('Error downloading image:', error.message);
         throw error;
     }
 }

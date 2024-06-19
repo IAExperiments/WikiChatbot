@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import imageDownload from './imagedownloader.js'
 import path from 'path'
 import fs from 'fs'
+import {getImagesDescriptorDeploymentName} from "./envloader.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,7 +27,7 @@ function loadPrompt(){
     // Comprueba si el archivo es un JPG o PNG
     const fileExtension = path.extname(filePath).toLowerCase();
     if (fileExtension !== '.jpg' && fileExtension !== '.jpeg' && fileExtension !== '.png') {
-        throw new Error('Por favor, seleccione un archivo JPG o PNG.');
+        throw new Error('Only JPG o PNG are supported');
     }
 
     // Convierte el buffer a una cadena Base64
@@ -40,7 +41,7 @@ export default async function (imageurl) {
     const output =  path.join(__dirname,'captura2.png')
     await imageDownload(imageurl,output).catch(console.error);
     const chat = new ChatOpenAI({
-        azureOpenAIApiDeploymentName: "gpt4o",
+        azureOpenAIApiDeploymentName: getImagesDescriptorDeploymentName(),
         temperature: 0 });
 
     const message = new HumanMessage({

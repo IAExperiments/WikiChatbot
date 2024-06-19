@@ -69,27 +69,23 @@ const textSplitter = new RecursiveCharacterTextSplitter(
   });
 const splits = await textSplitter.splitDocuments(docs);
 
+console.log("Hydrating Vector Database with documents ----------------------")
 const vectorStore = await MemoryVectorStore.fromDocuments(splits, new OpenAIEmbeddings());
 
 // Retrieve and generate using the relevant snippets of the blog.
 const retriever = vectorStore.asRetriever();
+console.log("End Hydration ----------------------")
 let promptTpl = loadPrompt();
 promptTpl = promptTpl.replace("{images}", imageDescriptions.join(".\n"));
-console.log("PROMPT:")
-console.log(promptTpl)
 const prompt =  PromptTemplate.fromTemplate(promptTpl);
 const model = new ChatOpenAI({      
   temperature: 0 });
-
  const retrievedDocs = await retriever.getRelevantDocuments(input);
-
  const serializeDocs = (docs) => docs.map((doc) => doc.pageContent).join("\n");
  console.log("Sending to OpenAi:")
-
   const chain = RunnableSequence.from([
   {
     context: retriever.pipe(serializeDocs),
-    // images: () => imageDescriptions[0],
     question: new RunnablePassthrough(),
   },
   prompt,
@@ -99,7 +95,6 @@ const model = new ChatOpenAI({
 
 const inputOAI = `question: ${inputsanitized.sanitizedContent}`;
 
-//var result = await chain.invoke(input);
 var result = await chain.invoke(inputOAI);
 console.log("OpenAi Response:")
 console.dir(result);
